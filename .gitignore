@@ -1,0 +1,7 @@
+*.js.map
+*.ts
+.vscode
+local.settings.json
+test
+node_modules/
+tsconfig.json
