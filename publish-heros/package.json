@@ -11,6 +11,7 @@
   "dependencies": {
     "@azure/identity": "^1.1.0",
     "@azure/keyvault-secrets": "^4.1.0",
+    "mssql": "^6.2.3",
     "request": "^2.88.2",
     "request-promise": "^4.2.6"
   }

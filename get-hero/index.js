@@ -1,14 +1,15 @@
-const odbc = require('odbc');
+const sql = require('mssql');
 
 const SQL_CONN_STR = process.env['SQL_CONN_STR'];
 
 module.exports = async function (context, req) {
-    const conn = await odbc.connect(SQL_CONN_STR);
-    const query = 'SELECT * FROM hero WHERE id=?';
 
     if (req.query.id) {
-        const results = await doQuery(conn, query, [ req.query.id ]);
+        await sql.connect(SQL_CONN_STR);
+        const query = `SELECT * FROM hero WHERE id={req.query.id}`;
+        const results = sql.query(query);
         const foundHero = results[0] && Object.keys(results[0]).length !== 0;
+
         if (foundHero) {
             context.res = {
                 body: results[0]
@@ -31,11 +32,3 @@ module.exports = async function (context, req) {
     }
 };
 
-function doQuery(conn, query, params) {
-    return new Promise((resolve, reject) => {
-        conn.query(query, params, (err, result) => {
-            if (err) reject(err);
-            else resolve(result);
-        });
-    });
-}

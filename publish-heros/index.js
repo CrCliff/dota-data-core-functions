@@ -1,5 +1,5 @@
 const request = require('request-promise');
-const odbc = require('odbc');
+const sql = require('mssql');
 const { DefaultAzureCredential } = require('@azure/identity');
 const { SecretClient } = require('@azure/keyvault-secrets');
 
@@ -16,19 +16,20 @@ const uri = BASE_URL + ENDPOINT;
 const SQL_CONN_STR = process.env['SQL_CONN_STR'];
 
 module.exports = async function (context, myTimer) {
+    const awaitingConnect = sql.connect(SQL_CONN_STR);
+    const awaitingKey = client.getSecret('steampowered');
+
     const timeStamp = new Date().toISOString();
     
-    if (myTimer.isPastDue)
-    {
+    if (myTimer.isPastDue) {
         context.log('JavaScript is running late!');
     }
+
     context.log('JavaScript timer trigger function ran!', timeStamp);   
 
-    const key = (await client.getSecret('steampowered')).value;
-    const qs = { key };
     const json = true;
-    context.log(uri);
-    context.log(key);
+    const key = (await awaitingKey).value;
+    const qs = { key };
 
     const { result } = await request({uri, qs, json});
 
@@ -36,22 +37,13 @@ module.exports = async function (context, myTimer) {
         .map(hero => `(${hero.id},'${hero.name}')`)
         .join(', ');
 
-    const conn = await odbc.connect(SQL_CONN_STR);
     const query = `
 TRUNCATE TABLE hero;
 SET IDENTITY_INSERT hero ON;
 INSERT INTO hero (id, name) VALUES ?;
     `; 
 
-    await doQuery(conn, query.replace('?', heroesList));
+    await awaitingConnect;
+    await sql.query(query.replace('?', heroesList));
 };
-
-function doQuery(conn, query, params) {
-    return new Promise((resolve, reject) => {
-        conn.query(query, params, (err, result) => {
-            if (err) reject(err);
-            else resolve(result);
-        });
-    });
-}
 
