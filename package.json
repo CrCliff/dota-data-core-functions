@@ -2,12 +2,18 @@
   "name": "dota-data-test",
   "version": "1.0.0",
   "description": "",
+  "subPackages": [
+    "get-hero",
+    "publish-heros"
+  ],
   "scripts": {
+    "postinstall": "subpkg install",
     "start": "func start",
     "test": "echo \"No tests yet...\""
   },
   "dependencies": {
-    "odbc": "^2.3.4"
+    "odbc": "^2.3.4",
+    "subpackage": "^1.1.0"
   },
   "devDependencies": {}
 }

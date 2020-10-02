@@ -3,5 +3,5 @@
 .vscode
 local.settings.json
 test
-node_modules/
+npm_install/
 tsconfig.json
