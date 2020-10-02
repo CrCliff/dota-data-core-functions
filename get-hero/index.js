@@ -7,7 +7,7 @@ module.exports = async function (context, req) {
     if (req.query.id) {
         await sql.connect(SQL_CONN_STR);
         const query = `SELECT * FROM hero WHERE id={req.query.id}`;
-        const results = sql.query(query);
+        const results = (await sql.query(query)).resultset;
         const foundHero = results[0] && Object.keys(results[0]).length !== 0;
 
         if (foundHero) {
@@ -22,6 +22,8 @@ module.exports = async function (context, req) {
                 }
             };
         }
+
+        sql.close();
     } else {
         context.res = {
             status: 400,
@@ -30,5 +32,6 @@ module.exports = async function (context, req) {
             }
         }
     }
+
 };
 
