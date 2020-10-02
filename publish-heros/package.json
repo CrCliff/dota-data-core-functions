@@ -1,7 +1,7 @@
 {
-  "name": "publish-teams",
+  "name": "publish-hero",
   "version": "1.0.0",
-  "description": "The `TimerTrigger` makes it incredibly easy to have your functions executed on a schedule. This sample demonstrates a simple use case of calling your function every 5 minutes.",
+  "description": "Publishes a list of heros to the correct SQL database.",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
