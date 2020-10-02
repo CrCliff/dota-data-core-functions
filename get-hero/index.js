@@ -7,7 +7,6 @@ const headers = {
 
 module.exports = async function (context, req) {
 
-
     if (req.query.id) {
         await sql.connect(SQL_CONN_STR);
         const query = `SELECT * FROM hero WHERE id=${req.query.id}`;
